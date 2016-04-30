@@ -42,7 +42,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "email validation should not accept valid addresses" do
-	invalid_addresses = %w[user@example,com USER_at_foo.com user.name@exampl. foo@bar_baz.com foo@bar+baz.com]
+	invalid_addresses = %w[user@example,com USER_at_foo.com user.name@exampl. foo@bar_baz.com foo@bar+baz.com foo@bar..com]
 	invalid_addresses.each do |invalid_address|
 		@user.email = invalid_address
 		assert_not @user.valid?, "#{invalid_addresses.inspect} should not be valid"
@@ -65,4 +65,11 @@ class UserTest < ActiveSupport::TestCase
     @user.password = @user.password_confirmation = "a" * 5
     assert_not @user.valid?
   end
+
+  test "email addresses should be saved as lower case" do
+    mixed_case_email = "Foo@ExaMpLe.cOm"
+    @user.email = mixed_case_email
+    @user.save
+    assert_equal mixed_case_email.downcase, @user.reload.email
+   end 
 end
