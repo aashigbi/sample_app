@@ -8,9 +8,10 @@ class UsersController < ApplicationController
   end
 
   def create
-  	@user = User.new(params[user_params]) #not the final implementation
+  	@user = User.new(user_params)
   	if @user.save
-  		#Handle a successeful save
+  		flash[:success] = "Welcome to the sample app!"
+  		redirect_to @user
   	else
   		render 'new' #if unsuccessful, renders new user page (i.e., signup flow)
   	end
